@@ -199,6 +199,7 @@
 		<!-- 图片验证码 <dependency> <groupId>com.octo.captcha</groupId> <artifactId>jcaptcha</artifactId> </dependency> <dependency> <groupId>com.octo.captcha</groupId> <artifactId>jcaptcha-api</artifactId> </dependency> -->
 
 		<!-- quartz -->
+		<!--
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
@@ -207,7 +208,7 @@
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz-jobs</artifactId>
 		</dependency>
-
+		-->
 		<!-- mysql -->
 		<dependency>
 			<groupId>mysql</groupId>
