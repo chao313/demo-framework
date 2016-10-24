@@ -43,9 +43,9 @@ public class BaseEntity implements Serializable{
 	@Id
 	protected String id;// ID
 	protected Date createTime;// 创建日期
-	protected String createUser;// 创建人
+//	protected String createUser;// 创建人
 	protected Date updateTime;// 修改日期
-	protected String updateUser;// 修改人
+//	protected String updateUser;// 修改人
 	
 	public boolean equals(Object obj) {
 		if (this == obj) {

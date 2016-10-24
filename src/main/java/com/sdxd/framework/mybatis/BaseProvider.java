@@ -136,7 +136,7 @@ public class BaseProvider<T extends BaseEntity> {
 		initFromThreadLocal();
 		// 设置默认值
 		Date now = Calendar.getInstance().getTime();
-		LoginUserDto user = SessionUtils.getUser();
+//		LoginUserDto user = SessionUtils.getUser();
 		if (StringUtils.isBlank(t.getId())) {
 			t.setId(UUID.randomUUID().toString().replace("-", ""));
 		}
@@ -147,25 +147,25 @@ public class BaseProvider<T extends BaseEntity> {
 
 		Class clazz = t.getClass();
 
-		if (user != null) {
-			t.setCreateUser(user.getUserName());
-			t.setUpdateUser(user.getUserName());
-
-			if(StringUtils.isNotBlank(user.getLoginIp())) {
-				try {
-					Method method = clazz.getMethod("setRemoteIp",String.class);
-					if (method != null) {
-						method.setAccessible(true);
-						method.invoke(t,user.getLoginIp());
-					}
-				} catch (Exception e) {
-					logger.warn("=======>core update class:{},not found setRemoteIp ", clazz);
-				}
-			}
-        }else{
-			t.setCreateUser("system");
-			t.setUpdateUser("system");
-		}
+//		if (user != null) {
+//			t.setCreateUser(user.getUserName());
+//			t.setUpdateUser(user.getUserName());
+//
+//			if(StringUtils.isNotBlank(user.getLoginIp())) {
+//				try {
+//					Method method = clazz.getMethod("setRemoteIp",String.class);
+//					if (method != null) {
+//						method.setAccessible(true);
+//						method.invoke(t,user.getLoginIp());
+//					}
+//				} catch (Exception e) {
+//					logger.warn("=======>core update class:{},not found setRemoteIp ", clazz);
+//				}
+//			}
+//        }else{
+//			t.setCreateUser("system");
+//			t.setUpdateUser("system");
+//		}
 
 		try {
 			Method method = clazz.getMethod("setServerIp",String.class);
@@ -200,7 +200,7 @@ public class BaseProvider<T extends BaseEntity> {
 		initFromThreadLocal();
 		// 设置默认值
 		Date now = Calendar.getInstance().getTime();
-		LoginUserDto user = SessionUtils.getUser();
+//		LoginUserDto user = SessionUtils.getUser();
 		final List<T> list = param.get("list");
 //		logger.debug("list info:{}",list);
 
@@ -218,26 +218,26 @@ public class BaseProvider<T extends BaseEntity> {
 				t.setUpdateTime(now);
 			}
 
-			if (user != null) {
-				t.setCreateUser(user.getUserName());
-				t.setUpdateUser(user.getUserName());
-
-				if(StringUtils.isNotBlank(user.getLoginIp())) {
-					try {
-						Method method = classType.getMethod("setRemoteIp",String.class);
-						if (method != null) {
-							method.setAccessible(true);
-							method.invoke(t,user.getLoginIp());
-						}
-					} catch (Exception e) {
-						logger.warn("=======>core update class:{},not found setRemoteIp ", classType);
-					}
-				}
-
-			} else {
-				t.setCreateUser("system");
-				t.setUpdateUser("system");
-			}
+//			if (user != null) {
+//				t.setCreateUser(user.getUserName());
+//				t.setUpdateUser(user.getUserName());
+//
+//				if(StringUtils.isNotBlank(user.getLoginIp())) {
+//					try {
+//						Method method = classType.getMethod("setRemoteIp",String.class);
+//						if (method != null) {
+//							method.setAccessible(true);
+//							method.invoke(t,user.getLoginIp());
+//						}
+//					} catch (Exception e) {
+//						logger.warn("=======>core update class:{},not found setRemoteIp ", classType);
+//					}
+//				}
+//
+//			} else {
+//				t.setCreateUser("system");
+//				t.setUpdateUser("system");
+//			}
 
 
 			try {
@@ -397,26 +397,26 @@ public class BaseProvider<T extends BaseEntity> {
 		initFromThreadLocal();
 		// 设置默认值
 		t.setUpdateTime(Calendar.getInstance().getTime());
-        LoginUserDto user = SessionUtils.getUser();
+//        LoginUserDto user = SessionUtils.getUser();
 
 
 		Class clazz = t.getClass();
-		if (user != null) {
-			t.setUpdateUser(user.getUserName());
-
-			if(StringUtils.isNotBlank(user.getLoginIp())) {
-				try {
-					Method method = clazz.getMethod("setRemoteIp",String.class);
-					if (method != null) {
-						method.setAccessible(true);
-						method.invoke(t,user.getLoginIp());
-					}
-				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-
-		}
+//		if (user != null) {
+//			t.setUpdateUser(user.getUserName());
+//
+//			if(StringUtils.isNotBlank(user.getLoginIp())) {
+//				try {
+//					Method method = clazz.getMethod("setRemoteIp",String.class);
+//					if (method != null) {
+//						method.setAccessible(true);
+//						method.invoke(t,user.getLoginIp());
+//					}
+//				} catch (Exception e) {
+//					logger.error(e.getMessage(), e);
+//				}
+//			}
+//
+//		}
 
 		try {
 			Method method = clazz.getMethod("setServerIp",String.class);
@@ -431,7 +431,7 @@ public class BaseProvider<T extends BaseEntity> {
 
 		// 过滤不允许更新的字段
 		t.setCreateTime(null);
-		t.setCreateUser(null);
+//		t.setCreateUser(null);
 		SQL sql = new SQL() {
 			{
 				UPDATE(tableName);
