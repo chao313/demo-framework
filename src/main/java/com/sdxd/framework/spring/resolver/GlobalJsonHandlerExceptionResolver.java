@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.sdxd.framework.constant.Constants;
-import com.sdxd.framework.dto.ResponseEntity;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sdxd.framework.dto.ResponseEntity;
 
 /**
  * Package Name: com.sdxd.vip.common.exceptionResolver
