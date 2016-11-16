@@ -83,6 +83,8 @@ public abstract class BaseMongoDAOImpl<T> implements BaseMongoDAO<T>{
      *  
      * @param mongoTemplate 
      */  
-  //  protected abstract void setMongoTemplate(MongoTemplate mongoTemplate);  
+    protected void setMongoTemplate(MongoTemplate mongoTemplate){
+    	 this.mongoTemplate = mongoTemplate; 
+    }
   
 }  
