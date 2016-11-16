@@ -38,35 +38,31 @@ public class LoggerAspect {
     /**
      * Before
      * 在核心业务执行前执行，不能阻止核心业务的调用。
-     *
-     * @param joinPoint
      */
     @Before("doLogger()")
     public void beforeAdvice(JoinPoint joinPoint) {
-        logger.debug("=======>进入方法之前记录日志切面开始");
+        logger.debug("=======>进入方法之前记录日志");
         Object targetObject = joinPoint.getTarget();
         Signature signature = joinPoint.getSignature();
         String signatureName = signature.getName();
         Object[] args = joinPoint.getArgs();
         logger.debug("before exec class:{},method:{},args:{}", targetObject, signatureName, args);
-        logger.debug("=======>进入方法之前记录日志切面结束");
+//        logger.debug("=======>进入方法之前记录日志切面结束");
 
     }
 
     /**
      * After
      * 核心业务逻辑退出后（包括正常执行结束和异常退出），执行此Advice
-     *
-     * @param joinPoint
      */
     @After(value = "doLogger()")
     public void afterAdvice(JoinPoint joinPoint) {
-        logger.debug("=======>退出方法记录日志切面开始");
+        logger.debug("=======>退出方法记录日志");
         Object targetObject = joinPoint.getTarget();
         Signature signature = joinPoint.getSignature();
         String signatureName = signature.getName();
         logger.debug("after exec class:{},method:{}", targetObject, signatureName);
-        logger.debug("=======>退出方法记录日志切面结束");
+//        logger.debug("=======>退出方法记录日志切面结束");
     }
 
     /**
@@ -97,37 +93,33 @@ public class LoggerAspect {
     /**
      * AfterReturning
      * 核心业务逻辑调用正常退出后，不管是否有返回值，正常退出后，均执行此Advice
-     * @param joinPoint
      */
     @AfterReturning(value = "doLogger()", returning = "retVal")
     public void afterReturningAdvice(JoinPoint joinPoint, String retVal) {
-        logger.debug("=======>方法正常退出记录日志切面开始");
+        logger.debug("=======>方法正常退出记录日志");
         Object targetObject = joinPoint.getTarget();
         Signature signature = joinPoint.getSignature();
         String signatureName = signature.getName();
         Object[] args = joinPoint.getArgs();
         logger.debug("afterReturning exec class:{},method:{},args:{},retVal:{}", targetObject, signatureName, args, retVal);
-        logger.debug("=======>方法正常退出记录日志切面结束");
+//        logger.debug("=======>方法正常退出记录日志切面结束");
     }
 
     /**
      * 核心业务逻辑调用异常退出后，执行此Advice，处理错误信息
      * <p/>
      * 注意：执行顺序在Around Advice之后
-     *
-     * @param joinPoint
-     * @param ex
      */
     @AfterThrowing(value = "doLogger()", throwing = "ex")
     public void afterThrowingAdvice(JoinPoint joinPoint, Exception ex) {
-        logger.debug("=======>方法抛出异常记录日志切面开始");
+        logger.debug("=======>方法抛出异常记录日志");
         Object targetObject = joinPoint.getTarget();
         Signature signature = joinPoint.getSignature();
         String signatureName = signature.getName();
         logger.debug("afterThrowing exec class:{},method:{}", targetObject, signatureName);
         logger.error("afterThrowing error msg:" + ex.getMessage(), ex);
 
-        logger.debug("=======>方法抛出异常记录日志切面结束");
+//        logger.debug("=======>方法抛出异常记录日志切面结束");
     }
 
 }
