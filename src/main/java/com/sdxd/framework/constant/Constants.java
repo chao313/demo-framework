@@ -39,6 +39,9 @@ public interface Constants {
 
         public static final String NO_PERMISSIONS = "1000008";
         public static final String NO_PERMISSIONS_MSG = "没有权限!";
+        
+        public static final String OPERATE_TIME_OUT = "1000009";
+        public static final String OPERATE_TIME_OUT_MSG = "操作超时";
     }
 
 
