@@ -37,7 +37,7 @@ public abstract class BaseMongoDAOImpl<T> implements BaseMongoDAO<T>{
   
     @Override  
     public T save(T entity) {  
-        mongoTemplate.insert(entity);  
+        mongoTemplate.save(entity);
         return entity;  
     }  
   
