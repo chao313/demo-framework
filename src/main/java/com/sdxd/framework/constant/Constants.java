@@ -42,6 +42,7 @@ public interface Constants {
         
         public static final String OPERATE_TIME_OUT = "1000009";
         public static final String OPERATE_TIME_OUT_MSG = "操作超时";
+        
     }
 
 
