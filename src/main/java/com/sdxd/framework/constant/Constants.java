@@ -43,6 +43,11 @@ public interface Constants {
         public static final String OPERATE_TIME_OUT = "1000009";
         public static final String OPERATE_TIME_OUT_MSG = "操作超时";
         
+        public static final String ADMIN_NO_USER = "1000010";
+        public static final String ADMIN_NO_USER_MSG = "用户不存在";
+        
+        public static final String ADMIN_PASSWORD_ERROR = "1000011";
+        public static final String ADMIN_PASSWORD_ERROR_MSG = "密码不正确";
     }
 
 
