@@ -48,6 +48,12 @@ public interface Constants {
         
         public static final String ADMIN_PASSWORD_ERROR = "1000011";
         public static final String ADMIN_PASSWORD_ERROR_MSG = "密码不正确";
+        
+        public static final String USER_NO_PHONE = "1000012";
+        public static final String USER_NO_PHONE_MSG = "用户手机号不存在";
+        
+        public static final String USER_NO_CELL_HISTORY = "1000013";
+        public static final String USER_NO_CELL_HISTORY_MSG = "用户手机号不存在";
     }
 
 
