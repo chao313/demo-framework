@@ -105,6 +105,10 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.siegmar</groupId>
+			<artifactId>logback-gelf</artifactId>
+		</dependency>
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -299,42 +303,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>localhost</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<database.driverClassName>com.mysql.jdbc.Driver</database.driverClassName>
-				<database.url><![CDATA[jdbc:mysql://localhost:3306/cw?useUnicode=true&characterEncoding=UTF-8]]></database.url>
-				<database.user>root</database.user>
-				<database.password>sa</database.password>
-			</properties>
-		</profile>
-		<profile>
-			<id>dev</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<database.driverClassName>com.mysql.jdbc.Driver</database.driverClassName>
-				<database.url><![CDATA[jdbc:mysql://192.168.1.214:3306/cw?useUnicode=true&characterEncoding=UTF-8]]></database.url>
-				<database.user>root</database.user>
-				<database.password></database.password>
-			</properties>
-		</profile>
-		<profile>
-			<id>test</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<database.driverClassName>com.mysql.jdbc.Driver</database.driverClassName>
-				<database.url><![CDATA[jdbc:mysql://192.168.1.237:3306/cw?useUnicode=true&characterEncoding=UTF-8]]></database.url>
-				<database.user>root</database.user>
-				<database.password></database.password>
-			</properties>
-		</profile>
-	</profiles>
 </project>
