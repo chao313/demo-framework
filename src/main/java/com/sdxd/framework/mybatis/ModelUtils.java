@@ -51,7 +51,8 @@ public class ModelUtils {
 			if (property.isUnableForColumnTarget(columnTarget)) {
 				continue;
 			}
-			if (columnTarget == ColumnTarget.INSERT || columnTarget == ColumnTarget.UPDATE || columnTarget == ColumnTarget.WHERE) {
+			if (//columnTarget == ColumnTarget.INSERT ||
+					columnTarget == ColumnTarget.UPDATE || columnTarget == ColumnTarget.WHERE) {
 				if (property.isId()) { // ID忽略
 					continue;
 				}

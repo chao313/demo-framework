@@ -36,11 +36,14 @@ public class Property {
 		readMethod = propertyDescriptor.getReadMethod();
 
 		// field
-		try {
-			field = modelClass.getDeclaredField(propertyDescriptor.getName());
-		} catch (NoSuchFieldException e) {
-			field = null;
-		}
+		Class clz = modelClass;
+		do {
+			try {
+				field = clz.getDeclaredField(propertyDescriptor.getName());
+			} catch (NoSuchFieldException e) {
+			}
+			clz = clz.getSuperclass();
+		}while (field == null && clz != Object.class);
 		
 		if (isTransient()) {
 			return;
