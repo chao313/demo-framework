@@ -10,17 +10,17 @@ import org.springframework.stereotype.Service;
  * 本机测试结果：1.6G i5 CPU, 8G内存， 每秒生成35万个ID
  * 理论上满足集群中单节点的需求
  */
-public class IDGeneratorWithSecond extends IDGeneratorWithTimestamp {
-    public IDGeneratorWithSecond() {
-        super("", IDDatePattern.PATTERN_SECONDS, 6);
+public class IDGeneratorWithMinute extends IDGeneratorWithTimestamp {
+    public IDGeneratorWithMinute() {
+        super("", IDDatePattern.PATTERN_MINUTES, 8);
     }
 
-    public IDGeneratorWithSecond(String prefix) {
-        super(prefix, IDDatePattern.PATTERN_SECONDS, 6);
+    public IDGeneratorWithMinute(String prefix) {
+        super(prefix, IDDatePattern.PATTERN_MINUTES, 8);
     }
 
-    public IDGeneratorWithSecond(String prefix, int bits) {
-        super(prefix, IDDatePattern.PATTERN_SECONDS, bits);
+    public IDGeneratorWithMinute(String prefix, int bits) {
+        super(prefix, IDDatePattern.PATTERN_MINUTES, bits);
     }
 
 }
