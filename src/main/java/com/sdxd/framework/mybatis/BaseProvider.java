@@ -1,6 +1,10 @@
 package com.sdxd.framework.mybatis;
 
+import com.sdxd.common.redis.template.RedisClientTemplate;
 import com.sdxd.common.utils.DateUtils;
+import com.sdxd.common.utils.KeyUtils;
+import com.sdxd.framework.constant.SysConstants;
+import com.sdxd.framework.context.ContextUtils;
 import com.sdxd.framework.entity.BaseEntity;
 import com.sdxd.framework.mybatis.complexQuery.CustomQueryParam;
 import com.sdxd.framework.mybatis.complexQuery.NoValueQueryParam;
@@ -24,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.persistence.Table;
 
 @SuppressWarnings("all")
@@ -35,6 +40,7 @@ public class BaseProvider<T extends BaseEntity> {
     private static final String OPERATOR_EQUAL = " = ";
     private static final String OPERATOR_LIKE = " like ";
     private static String SERVER_IP = "";
+    private RedisClientTemplate redisClient;
 
     static {
         try {
@@ -49,10 +55,41 @@ public class BaseProvider<T extends BaseEntity> {
         modelClass = BaseProvider.threadModelClass.get();
         tableName = modelClass.getAnnotation(Table.class).name();
         BaseProvider.threadModelClass.remove();
+        redisClient = (RedisClientTemplate) ContextUtils.getBean(RedisClientTemplate.class);
     }
 
     public static void setModelClass(Class<?> modelClass) {
         BaseProvider.threadModelClass.set(modelClass);
+    }
+
+    private String generatorId(String tableName) {
+        String id = UUID.randomUUID().toString().replace("-", "");
+        if (redisClient != null) {
+            String tablePrimarykey = SysConstants.REDIS_KEY_TABLE_PRIMARY_ID;
+            String timestamp = DateUtils.convert(new Date(), DateUtils.DATE_TIMESTAMP_SHORT_FORMAT);
+            Map<String, String> param = new HashMap<String, String>();
+            try {
+                param.put("tableName",tableName);
+                param.put("time",timestamp);
+                String redisKey =KeyUtils.replaceKey(tablePrimarykey, param);
+                Long index = redisClient.incr(redisKey);
+                //
+                redisClient.expire(redisKey,10);
+                if (index != null) {
+//                  String indexStr = String.valueOf(index);
+//                  Integer len = StringUtils.length(indexStr);
+                    String indexStr = String.format("%010d", index);
+                    id = timestamp + indexStr;
+                }
+            } catch (Exception e) {
+                logger.warn("generator table primary error!", e);
+            }
+        }
+        return id;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(String.format("%010d", 100));
     }
 
     public String getAll() {
@@ -137,7 +174,7 @@ public class BaseProvider<T extends BaseEntity> {
         Date now = Calendar.getInstance().getTime();
 //		LoginUserDto user = SessionUtils.getUser();
         if (StringUtils.isBlank(t.getId())) {
-            t.setId(UUID.randomUUID().toString().replace("-", ""));
+            t.setId(generatorId(tableName));
         }
         if (t.getCreateTime() == null) {
             t.setCreateTime(now);
@@ -210,7 +247,7 @@ public class BaseProvider<T extends BaseEntity> {
 //			logger.debug("obj info:{}",obj);
             T t = (T) obj;
             if (StringUtils.isBlank(t.getId())) {
-                t.setId(UUID.randomUUID().toString().replace("-", ""));
+                t.setId(generatorId(tableName));
             }
             if (t.getCreateTime() == null) {
                 t.setCreateTime(now);

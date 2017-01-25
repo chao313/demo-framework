@@ -26,4 +26,6 @@ public abstract  class SysConstants {
 
 
 	public static final String ROOT_URL_PREFIX = "/api";
+
+	public static final String REDIS_KEY_TABLE_PRIMARY_ID  = "FRAMEWORK:TABLE:PRIMARY:${tableName}:${time}";
 }
