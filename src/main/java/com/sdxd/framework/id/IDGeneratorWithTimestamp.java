@@ -32,8 +32,11 @@ public class IDGeneratorWithTimestamp implements IDGenerator {
         this.prefix = prefix;
         this.max = (long) Math.pow(10, bits);
         this.pattern = pattern;
-        Object obj = PropertyPlaceholderConfigurer.getContextProperty("server.id");
-        serverId = obj == null ? "" : obj.toString();
+        serverId = System.getProperty("server.id");
+        if(serverId==null) {
+            Object obj = PropertyPlaceholderConfigurer.getContextProperty("server.id");
+            serverId = obj == null ? "" : obj.toString();
+        }
     }
 
 
