@@ -65,7 +65,7 @@ public interface BaseDao<T extends BaseEntity> {
 
 	@InsertProvider(type = BaseProvider.class, method = "insertBatch")
 	@Options(keyProperty = "id",flushCache = true)
-	public int insertBatch(@Param("list")List<T> list);
+	public int insertBatch(@Param("list") List<T> list);
 	
 	@DeleteProvider(type = BaseProvider.class, method = "delete")
 	@Options(flushCache = true)

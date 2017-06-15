@@ -11,7 +11,15 @@ import com.sdxd.framework.mybatis.complexQuery.NoValueQueryParam;
 import com.sdxd.framework.mybatis.complexQuery.WithValueQueryParam;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.jdbc.SQL;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.mybatis.spring.batch.MyBatisBatchItemWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -69,12 +78,12 @@ public class BaseProvider<T extends BaseEntity> {
             String timestamp = DateUtils.convert(new Date(), DateUtils.DATE_TIMESTAMP_SHORT_FORMAT);
             Map<String, String> param = new HashMap<String, String>();
             try {
-                param.put("tableName",tableName);
-                param.put("time",timestamp);
-                String redisKey =KeyUtils.replaceKey(tablePrimarykey, param);
+                param.put("tableName", tableName);
+                param.put("time", timestamp);
+                String redisKey = KeyUtils.replaceKey(tablePrimarykey, param);
                 Long index = redisClient.incr(redisKey);
                 //防止不通服务器有时差，生成的同一秒id过期重复，过期时间buffer 10秒
-                redisClient.expire(redisKey,10);
+                redisClient.expire(redisKey, 10);
                 if (index != null) {
 //                  String indexStr = String.valueOf(index);
 //                  Integer len = StringUtils.length(indexStr);
@@ -291,9 +300,10 @@ public class BaseProvider<T extends BaseEntity> {
         final Map<String, Property> properties = ModelUtils.getProperties(cla, null);
         SQL sql = new SQL() {
             {
+
                 INSERT_INTO(tableName);
                 for (Property property : properties.values()) {
-                    VALUES(property.getColumnName(), "#{" + property.getName() + "}");
+                    VALUES(property.getColumnName(), "#'{'list[{0}]." + property.getName() + "}");
                 }
 
             }
@@ -301,7 +311,6 @@ public class BaseProvider<T extends BaseEntity> {
 
 
         Method[] methods = classType.getMethods();
-
 
         Map<String, Method> methodMap = new HashMap<String, Method>();
         for (Method method : methods) {
@@ -329,65 +338,25 @@ public class BaseProvider<T extends BaseEntity> {
         String sqlStr = sql.toString();
         int index = StringUtils.lastIndexOf(sqlStr, "(");
         String prefixSql = StringUtils.substring(sqlStr, 0, index);
+
+        String suffixSql = StringUtils.substring(sqlStr, index);
+
+
+        MessageFormat mf = new MessageFormat(suffixSql);
+
         StringBuffer sqlBuffer = new StringBuffer(prefixSql);
+
         for (int i = 0; i < list.size(); i++) {
             T t = list.get(i);
             if (i == 0) {
-                sqlBuffer.append("(");
+                sqlBuffer.append(mf.format(new Object[]{i}));
             } else {
-                sqlBuffer.append(",(");
+                sqlBuffer.append(",");
+                sqlBuffer.append(mf.format(new Object[]{i}));
             }
 
-
-            Iterator<Property> iterator = properties.values().iterator();
-            while (iterator.hasNext()) {
-                Property property = iterator.next();
-
-                String fieldName = property.getName();
-                String methodName = null;
-                if (fieldName.length() == 1) {
-                    methodName = fieldName.substring(0, 1).toUpperCase();
-                } else {
-                    methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length());
-                }
-                methodName = "get" + methodName;
-                Method method = methodMap.get(methodName);
-                method.setAccessible(true);
-                Object val = method.invoke(t);
-                Class type = typeMap.get(fieldName);
-//				logger.debug("========insertBatch field name:{},type:{},value:{}", fieldName, type, val);
-
-                if (type.isEnum()) {
-                    sqlBuffer.append("'");
-                    if (val != null) {
-                        Enum<?> e = (Enum<?>) val;
-                        sqlBuffer.append(e.name());
-                    }
-                    sqlBuffer.append("'");
-                } else if (Date.class.equals(type)) {
-                    sqlBuffer.append("'");
-                    if (val != null) {
-                        Date date = (Date) val;
-                        sqlBuffer.append(DateUtils.convert(date));
-                    } else {
-                        sqlBuffer.append("0000-00-00 00:00;00");
-                    }
-                    sqlBuffer.append("'");
-                } else {
-                    sqlBuffer.append("'");
-                    if (val != null) {
-                        sqlBuffer.append(val.toString());
-                    }
-                    sqlBuffer.append("'");
-                }
-                if (iterator.hasNext()) {
-                    sqlBuffer.append(",");
-                }
-            }
-
-
-            sqlBuffer.append(")");
         }
+
         return sqlBuffer.toString();
     }
 
