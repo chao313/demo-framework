@@ -340,7 +340,7 @@ public class BaseProvider<T extends BaseEntity> {
         String prefixSql = StringUtils.substring(sqlStr, 0, index);
 
         String suffixSql = StringUtils.substring(sqlStr, index);
-
+ 
 
         MessageFormat mf = new MessageFormat(suffixSql);
 
