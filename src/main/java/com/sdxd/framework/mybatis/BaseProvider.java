@@ -82,8 +82,8 @@ public class BaseProvider<T extends BaseEntity> {
                 param.put("time", timestamp);
                 String redisKey = KeyUtils.replaceKey(tablePrimarykey, param);
                 Long index = redisClient.incr(redisKey);
-                //防止不通服务器有时差，生成的同一秒id过期重复，过期时间buffer 10秒
-                redisClient.expire(redisKey, 10);
+                //防止不通服务器有时差，生成的同一秒id过期重复，过期时间buffer 60秒
+                redisClient.expire(redisKey, 60);
                 if (index != null) {
 //                  String indexStr = String.valueOf(index);
 //                  Integer len = StringUtils.length(indexStr);
