@@ -1,28 +1,5 @@
 package com.sdxd.framework.mybatis;
 
-import com.sdxd.common.redis.template.RedisClientTemplate;
-import com.sdxd.common.utils.DateUtils;
-import com.sdxd.common.utils.KeyUtils;
-import com.sdxd.framework.constant.SysConstants;
-import com.sdxd.framework.context.ContextUtils;
-import com.sdxd.framework.entity.BaseEntity;
-import com.sdxd.framework.mybatis.complexQuery.CustomQueryParam;
-import com.sdxd.framework.mybatis.complexQuery.NoValueQueryParam;
-import com.sdxd.framework.mybatis.complexQuery.WithValueQueryParam;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.binding.MapperMethod;
-import org.apache.ibatis.jdbc.SQL;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.mybatis.spring.batch.MyBatisBatchItemWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -32,13 +9,28 @@ import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.LongAccumulator;
+import java.util.function.LongBinaryOperator;
 
-import javax.annotation.Resource;
 import javax.persistence.Table;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.jdbc.SQL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.sdxd.common.redis.template.RedisClientTemplate;
+import com.sdxd.common.utils.DateUtils;
+import com.sdxd.common.utils.KeyUtils;
+import com.sdxd.framework.constant.SysConstants;
+import com.sdxd.framework.context.ContextUtils;
+import com.sdxd.framework.entity.BaseEntity;
+import com.sdxd.framework.mybatis.complexQuery.CustomQueryParam;
+import com.sdxd.framework.mybatis.complexQuery.NoValueQueryParam;
+import com.sdxd.framework.mybatis.complexQuery.WithValueQueryParam;
 
 @SuppressWarnings("all")
 public class BaseProvider<T extends BaseEntity> {
@@ -70,35 +62,31 @@ public class BaseProvider<T extends BaseEntity> {
     public static void setModelClass(Class<?> modelClass) {
         BaseProvider.threadModelClass.set(modelClass);
     }
-
-    private String generatorId(String tableName) {
+    private static LongBinaryOperator op = (x, y) -> (x+y)>99999?0:(x+y);
+    private static LongAccumulator longAccumulator = new LongAccumulator(op, 0L);
+    private String generatorId() {
         String id = UUID.randomUUID().toString().replace("-", "");
-        if (redisClient != null) {
             String tablePrimarykey = SysConstants.REDIS_KEY_TABLE_PRIMARY_ID;
             String timestamp = DateUtils.convert(new Date(), DateUtils.DATE_TIMESTAMP_SHORT_FORMAT);
             Map<String, String> param = new HashMap<String, String>();
-            try {
-                param.put("tableName", tableName);
-                param.put("time", timestamp);
-                String redisKey = KeyUtils.replaceKey(tablePrimarykey, param);
-                Long index = redisClient.incr(redisKey);
-                //防止不通服务器有时差，生成的同一秒id过期重复，过期时间buffer 60秒
-                redisClient.expire(redisKey, 60);
-                if (index != null) {
-//                  String indexStr = String.valueOf(index);
-//                  Integer len = StringUtils.length(indexStr);
-                    String indexStr = String.format("%010d", index);
-                    id = timestamp + indexStr;
-                }
-            } catch (Exception e) {
-                logger.warn("generator table primary error!", e);
-            }
-        }
+            longAccumulator.accumulate(1);
+            id = timestamp + getLastAddressString() + String.format("%05d", longAccumulator.get());
         return id;
     }
-
+    
+    private static String getLastAddressString() {
+    	if(StringUtils.isEmpty(SERVER_IP)) return "";
+    	String[] nodes = SERVER_IP.split("\\.");
+    	if(nodes.length != 4) return "";
+    	String lastNode = nodes[3];
+    	
+    	return String.format("%03d", Integer.valueOf(lastNode));
+    }
     public static void main(String[] args) {
-        System.out.println(String.format("%010d", 100));
+    	BaseProvider b = new BaseProvider<>();
+		for(int i=0; i<10;i++) {
+			System.out.println(b.generatorId());
+		}
     }
 
     public String getAll() {
@@ -183,7 +171,7 @@ public class BaseProvider<T extends BaseEntity> {
         Date now = Calendar.getInstance().getTime();
 //		LoginUserDto user = SessionUtils.getUser();
         if (StringUtils.isBlank(t.getId())) {
-            t.setId(generatorId(tableName));
+            t.setId(generatorId());
         }
         if (t.getCreateTime() == null) {
             t.setCreateTime(now);
@@ -256,7 +244,7 @@ public class BaseProvider<T extends BaseEntity> {
 //			logger.debug("obj info:{}",obj);
             T t = (T) obj;
             if (StringUtils.isBlank(t.getId())) {
-                t.setId(generatorId(tableName));
+                t.setId(generatorId());
             }
             if (t.getCreateTime() == null) {
                 t.setCreateTime(now);
