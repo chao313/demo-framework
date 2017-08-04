@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.LongAccumulator;
 import java.util.function.LongBinaryOperator;
@@ -62,30 +63,37 @@ public class BaseProvider<T extends BaseEntity> {
     public static void setModelClass(Class<?> modelClass) {
         BaseProvider.threadModelClass.set(modelClass);
     }
-    private static LongBinaryOperator op = (x, y) -> (x+y)>99999?0:(x+y);
-    private static LongAccumulator longAccumulator = new LongAccumulator(op, 0L);
-    private String generatorId() {
+   
+    private String generatorId(String tableName) {
         String id = UUID.randomUUID().toString().replace("-", "");
             String tablePrimarykey = SysConstants.REDIS_KEY_TABLE_PRIMARY_ID;
             String timestamp = DateUtils.convert(new Date(), DateUtils.DATE_TIMESTAMP_SHORT_FORMAT);
             Map<String, String> param = new HashMap<String, String>();
-            longAccumulator.accumulate(1);
-            id = timestamp + getLastAddressString() + String.format("%05d", longAccumulator.get());
+            id = timestamp + getLastAddressString() + getAccumulatorString(tableName);
         return id;
+    }
+    
+    private static LongBinaryOperator op = (x, y) -> (x+y)>99999?0:(x+y);
+    private static Map<String, LongAccumulator> longAccumulatorMap = new TreeMap<>();
+    private String getAccumulatorString(String tableName) {
+    	if(longAccumulatorMap.get(tableName) == null) {
+    		longAccumulatorMap.put(tableName, new LongAccumulator(op, 0L));
+    	}
+    	LongAccumulator longAccumulator = longAccumulatorMap.get(tableName);
+    	longAccumulator.accumulate(1);
+    	return String.format("%05d", longAccumulator.get());
     }
     
     private static String getLastAddressString() {
     	if(StringUtils.isEmpty(SERVER_IP)) return "";
     	String[] nodes = SERVER_IP.split("\\.");
     	if(nodes.length != 4) return "";
-    	String lastNode = nodes[3];
-    	
-    	return String.format("%03d", Integer.valueOf(lastNode));
+    	return String.format("%03d", Integer.valueOf(nodes[2])) + String.format("%03d", Integer.valueOf(nodes[3]));
     }
     public static void main(String[] args) {
     	BaseProvider b = new BaseProvider<>();
 		for(int i=0; i<10;i++) {
-			System.out.println(b.generatorId());
+			System.out.println(b.generatorId("t_pay_payment_log"));
 		}
     }
 
@@ -171,7 +179,7 @@ public class BaseProvider<T extends BaseEntity> {
         Date now = Calendar.getInstance().getTime();
 //		LoginUserDto user = SessionUtils.getUser();
         if (StringUtils.isBlank(t.getId())) {
-            t.setId(generatorId());
+            t.setId(generatorId(tableName));
         }
         if (t.getCreateTime() == null) {
             t.setCreateTime(now);
@@ -244,7 +252,7 @@ public class BaseProvider<T extends BaseEntity> {
 //			logger.debug("obj info:{}",obj);
             T t = (T) obj;
             if (StringUtils.isBlank(t.getId())) {
-                t.setId(generatorId());
+                t.setId(generatorId(tableName));
             }
             if (t.getCreateTime() == null) {
                 t.setCreateTime(now);
