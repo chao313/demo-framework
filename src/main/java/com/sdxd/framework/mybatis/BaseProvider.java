@@ -3,11 +3,15 @@ package com.sdxd.framework.mybatis;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,10 +49,24 @@ public class BaseProvider<T extends BaseEntity> {
 
     static {
         try {
-            InetAddress inetAddress = InetAddress.getLocalHost();
-            SERVER_IP = inetAddress.getHostAddress();
-        } catch (UnknownHostException e) {
-        }
+			Enumeration<NetworkInterface> allNetInterfaces;
+			allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+			while (allNetInterfaces.hasMoreElements()){
+				NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
+				Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+				while (addresses.hasMoreElements()){
+					InetAddress ip = (InetAddress) addresses.nextElement();
+					if (ip != null 
+							&& ip instanceof Inet4Address
+		            		&& !ip.isLoopbackAddress() //loopback地址即本机地址，IPv4的loopback范围是127.0.0.0 ~ 127.255.255.255
+		            		&& ip.getHostAddress().indexOf(":")==-1){
+						SERVER_IP =  ip.getHostAddress();
+					} 
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
     }
 
 
