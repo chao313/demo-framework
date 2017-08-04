@@ -42,7 +42,6 @@ public class BaseProvider<T extends BaseEntity> {
     private static final String OPERATOR_EQUAL = " = ";
     private static final String OPERATOR_LIKE = " like ";
     private static String SERVER_IP = "";
-    private RedisClientTemplate redisClient;
 
     static {
         try {
@@ -57,7 +56,6 @@ public class BaseProvider<T extends BaseEntity> {
         modelClass = BaseProvider.threadModelClass.get();
         tableName = modelClass.getAnnotation(Table.class).name();
         BaseProvider.threadModelClass.remove();
-        redisClient = (RedisClientTemplate) ContextUtils.getBean(RedisClientTemplate.class);
     }
 
     public static void setModelClass(Class<?> modelClass) {
