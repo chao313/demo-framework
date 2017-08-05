@@ -89,9 +89,9 @@ public class BaseProvider<T extends BaseEntity> {
         return id;
     }
     
-    private static LongBinaryOperator op = (x, y) -> (x+y)>99999?0:(x+y);
+    private static LongBinaryOperator op = (x, y) -> (x+y)>99999?(x+y)%99999:(x+y);
     private static Map<String, LongAccumulator> longAccumulatorMap = new TreeMap<>();
-    private String getAccumulatorString(String tableName) {
+    private  String getAccumulatorString(String tableName) {
     	if(longAccumulatorMap.get(tableName) == null) {
     		longAccumulatorMap.put(tableName, new LongAccumulator(op, 0L));
     	}
@@ -107,10 +107,21 @@ public class BaseProvider<T extends BaseEntity> {
     	return String.format("%03d", Integer.valueOf(nodes[2])) + String.format("%03d", Integer.valueOf(nodes[3]));
     }
     public static void main(String[] args) {
-    	BaseProvider b = new BaseProvider<>();
-		for(int i=0; i<10;i++) {
-			System.out.println(b.generatorId("t_pay_payment_log"));
-		}
+    	LongAccumulator longAccumulator = new LongAccumulator(op, 0L);
+    	System.out.println(longAccumulator.get());
+    	longAccumulator.accumulate(99999);
+    	
+    	for(int i=0;i<100;i++) {
+    		new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					longAccumulator.accumulate(1);
+			    	System.out.println(longAccumulator.get());
+				}
+			}).start();
+    	}
+    	
     }
 
     public String getAll() {
