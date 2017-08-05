@@ -13,8 +13,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.LongAccumulator;
@@ -91,7 +93,7 @@ public class BaseProvider<T extends BaseEntity> {
     
     private static LongBinaryOperator op = (x, y) -> (x+y)>99999?(x+y)%99999:(x+y);
     private static Map<String, LongAccumulator> longAccumulatorMap = new TreeMap<>();
-    private  String getAccumulatorString(String tableName) {
+    private static synchronized String getAccumulatorString(String tableName) {
     	if(longAccumulatorMap.get(tableName) == null) {
     		longAccumulatorMap.put(tableName, new LongAccumulator(op, 0L));
     	}
@@ -110,14 +112,19 @@ public class BaseProvider<T extends BaseEntity> {
     	LongAccumulator longAccumulator = new LongAccumulator(op, 0L);
     	System.out.println(longAccumulator.get());
     	longAccumulator.accumulate(99999);
-    	
-    	for(int i=0;i<100;i++) {
+    	Set<String> set = new HashSet<>();
+    	for(int i=0;i<1000;i++) {
+    		final int a = i;
     		new Thread(new Runnable() {
 				
 				@Override
 				public void run() {
 					longAccumulator.accumulate(1);
-			    	System.out.println(longAccumulator.get());
+					String s = getAccumulatorString("test");
+					if(set.contains(s)){
+						System.out.println(a+" repeat " + s);
+					}
+			    	set.add(s);
 				}
 			}).start();
     	}
