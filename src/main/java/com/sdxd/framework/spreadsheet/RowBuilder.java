@@ -1,15 +1,15 @@
 package com.sdxd.framework.spreadsheet;
 
-import com.alibaba.dubbo.common.utils.Assert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
-import rx.Observable;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * *****************************************************************************
@@ -84,7 +84,7 @@ public class RowBuilder {
     }
 
     public RowBuilder cells(String... values) {
-        Observable.from(values).forEach(this::cell);
+        Stream.of(values).forEach(this::cell);
         return this;
     }
 

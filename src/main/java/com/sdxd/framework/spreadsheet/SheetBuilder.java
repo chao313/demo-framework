@@ -1,6 +1,5 @@
 package com.sdxd.framework.spreadsheet;
 
-import com.alibaba.dubbo.common.utils.Assert;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
@@ -8,7 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
-import rx.Observable;
+import org.springframework.util.Assert;
 
 import static org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder.BorderSide.*;
 
@@ -81,7 +80,10 @@ public class SheetBuilder {
         this.currentRowIndex ++;
         RowBuilder builder = new RowBuilder(spreadsheet, this, row, errorStyle);
         builder.cell(error);
-        Observable.range(1, maxColumnCount - 1).forEach(i -> builder.blank());
+        for (int i = 1; i <= maxColumnCount - 1; i ++) {
+            builder.blank();
+        }
+//        Observable.range(1, maxColumnCount - 1).forEach(i -> builder.blank());
         sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 0, this.maxColumnCount - 2));
     }
 
