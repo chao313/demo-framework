@@ -68,6 +68,8 @@ public class Spreadsheet {
 
     private DataFormat dataFormat;
 
+    private SheetStyles defaultSheetStyles;
+
     public Spreadsheet(InputStream in, Type type) {
         Assert.notNull(type, "Type can not be null");
         try {
@@ -88,6 +90,7 @@ public class Spreadsheet {
         this.workbook = workbook;
         this.streaming = SXSSFWorkbook.class.isInstance(workbook);
         this.creationHelper = workbook.getCreationHelper();
+        this.defaultSheetStyles = new SheetStyles(this);
     }
 
     public Object read() {
@@ -117,6 +120,10 @@ public class Spreadsheet {
 
     public XSSFColor newColor(int red, int green, int blue) {
         return new XSSFColor(new java.awt.Color(red, green, blue));
+    }
+
+    public SheetStyles getDefaultSheetStyles() {
+        return defaultSheetStyles;
     }
 
     protected Object parse() {
