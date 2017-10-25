@@ -31,6 +31,17 @@ public class Spreadsheet {
 
     private static final Logger log = LoggerFactory.getLogger(Spreadsheet.class);
 
+    public static Spreadsheet newSpreadsheet() {
+        return newSpreadsheet(false);
+    }
+
+    public static Spreadsheet newSpreadsheet(boolean streaming) {
+        if (streaming) {
+            return new Spreadsheet(new SXSSFWorkbook());
+        }
+        return new Spreadsheet(new XSSFWorkbook());
+    }
+
     public enum Type {
         XLS("xls"), XLSX("xlsx");
 
