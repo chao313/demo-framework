@@ -105,6 +105,19 @@ public class SheetBuilder {
         spreadsheet.setFormula(cell, "SUM(" + sumCells + ")");
     }
 
+    public void formula(int mergedRegion, String formula) {
+        CellRangeAddress cellRangeAddress = sheet.getMergedRegion(mergedRegion);
+        int rowIndex = cellRangeAddress.getFirstRow();
+        int cellIndex = cellRangeAddress.getFirstColumn();
+        formula(rowIndex, cellIndex, formula);
+    }
+
+    public void formula(int rowIndex, int cellIndex, String formula) {
+        Row row = sheet.getRow(rowIndex);
+        Cell cell = row.getCell(cellIndex);
+        spreadsheet.setFormula(cell, formula);
+    }
+
     public void addError(String error) {
         Row row = sheet.createRow(this.currentRowIndex);
         this.rowIndex = currentRowIndex;
