@@ -69,6 +69,10 @@ public class SheetBuilder {
         });
     }
 
+    public RowBuilder newRow() {
+        return newRow(spreadsheet.getDefaultSheetStyles().getBodyStyle());
+    }
+
     public RowBuilder newRow(CellStyle defaultStyle) {
         Row row = sheet.createRow(this.currentRowIndex);
         this.currentRowIndex ++;
