@@ -30,6 +30,7 @@ public class SheetBuilder {
 
     private Sheet sheet;
 
+    private int rowIndex;
     private int currentRowIndex;
 
     private int maxColumnCount;
@@ -40,6 +41,7 @@ public class SheetBuilder {
         Assert.notNull(sheet, "Sheet can not be null");
         this.spreadsheet = spreadsheet;
         this.sheet = sheet;
+        this.rowIndex = 0;
         this.currentRowIndex = 0;
         this.maxColumnCount = 0;
 
@@ -69,12 +71,17 @@ public class SheetBuilder {
         });
     }
 
+    public int getRowIndex() {
+        return rowIndex;
+    }
+
     public RowBuilder newRow() {
         return newRow(spreadsheet.getDefaultSheetStyles().getBodyStyle());
     }
 
     public RowBuilder newRow(CellStyle defaultStyle) {
         Row row = sheet.createRow(this.currentRowIndex);
+        this.rowIndex = currentRowIndex;
         this.currentRowIndex ++;
         return new RowBuilder(spreadsheet, this, row, defaultStyle);
     }
@@ -85,6 +92,7 @@ public class SheetBuilder {
 
     public void addError(String error) {
         Row row = sheet.createRow(this.currentRowIndex);
+        this.rowIndex = currentRowIndex;
         this.currentRowIndex ++;
         RowBuilder builder = new RowBuilder(spreadsheet, this, row, errorStyle);
         builder.cell(error);
