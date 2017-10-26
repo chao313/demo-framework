@@ -79,6 +79,10 @@ public class SheetBuilder {
         return new RowBuilder(spreadsheet, this, row, defaultStyle);
     }
 
+    public void merge(int firstRow, int lastRow, int firstCol, int lastCol) {
+        sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+    }
+
     public void addError(String error) {
         Row row = sheet.createRow(this.currentRowIndex);
         this.currentRowIndex ++;
