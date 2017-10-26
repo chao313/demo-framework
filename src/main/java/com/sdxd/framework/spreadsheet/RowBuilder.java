@@ -107,6 +107,10 @@ public class RowBuilder {
         return decimal(value.doubleValue(), style);
     }
 
+    public RowBuilder date(Date value) {
+        return date(value, spreadsheet.getDefaultSheetStyles().getDateStyle());
+    }
+
     public RowBuilder date(Date value, CellStyle style) {
         if (value == null) {
             return cell("");

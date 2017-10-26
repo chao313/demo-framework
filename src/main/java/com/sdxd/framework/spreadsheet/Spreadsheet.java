@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -124,6 +125,19 @@ public class Spreadsheet {
 
     public SheetStyles getDefaultSheetStyles() {
         return defaultSheetStyles;
+    }
+
+    public void write(OutputStream out) {
+        try {
+            getWorkbook().write(out);
+        } catch (IOException e) {
+            log.error("Write spreadsheet error!", e);
+        } finally {
+            Workbook temp = getWorkbook();
+            if (temp instanceof SXSSFWorkbook) {
+                ((SXSSFWorkbook) temp).dispose();
+            }
+        }
     }
 
     protected Object parse() {
