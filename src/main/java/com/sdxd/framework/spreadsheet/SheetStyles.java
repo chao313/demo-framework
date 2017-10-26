@@ -20,6 +20,20 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
  */
 public class SheetStyles {
 
+    public static CellStyle newDateStyle(Spreadsheet spreadsheet, String format) {
+        short dateFormat = spreadsheet.newDataFormat(format);
+        return spreadsheet.newStyle(cellStyle -> {
+            cellStyle.setDataFormat(dateFormat);
+            cellStyle.setAlignment(CellStyle.ALIGN_LEFT);
+            cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+            cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+            cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
+            cellStyle.setBorderRight(CellStyle.BORDER_THIN);
+            cellStyle.setBorderTop(CellStyle.BORDER_THIN);
+            cellStyle.setFont(spreadsheet.getDefaultSheetStyles().bodyFont);
+        });
+    }
+
     private Spreadsheet spreadsheet;
 
     private Font bodyFont;
@@ -60,20 +74,6 @@ public class SheetStyles {
             cellStyle.setFont(bodyFont);
         });
         this.dateStyle = spreadsheet.newStyle(cellStyle -> {
-            cellStyle.setDataFormat(dateFormat);
-            cellStyle.setAlignment(CellStyle.ALIGN_LEFT);
-            cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-            cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
-            cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
-            cellStyle.setBorderRight(CellStyle.BORDER_THIN);
-            cellStyle.setBorderTop(CellStyle.BORDER_THIN);
-            cellStyle.setFont(bodyFont);
-        });
-    }
-
-    public CellStyle newDateStyle(String format) {
-        short dateFormat = spreadsheet.newDataFormat(format);
-        return spreadsheet.newStyle(cellStyle -> {
             cellStyle.setDataFormat(dateFormat);
             cellStyle.setAlignment(CellStyle.ALIGN_LEFT);
             cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
