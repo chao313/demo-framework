@@ -86,7 +86,9 @@ public class SheetBuilder {
     }
 
     public int merge(int firstRow, int lastRow, int firstCol, int lastCol) {
-        return sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+        sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+        int mergedRegionCount = sheet.getNumMergedRegions();
+        return mergedRegionCount - 1;
     }
 
     public void sum(int mergedRegion, String columnPrefix, List<String> sumRows) {
