@@ -244,6 +244,12 @@
             <artifactId>poi-ooxml</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+
         <!-- <dependency> <groupId>jfreechart</groupId> <artifactId>jfreechart</artifactId> </dependency> <dependency> <groupId>org.apache.cxf</groupId> <artifactId>cxf-rt-frontend-jaxws</artifactId> <exclusions> <exclusion> <artifactId>asm</artifactId> <groupId>asm</groupId> </exclusion> </exclusions> </dependency> <dependency> <groupId>org.apache.cxf</groupId> <artifactId>cxf-rt-transports-http</artifactId> </dependency> <dependency> <groupId>org.apache.cxf</groupId> <artifactId>cxf-rt-frontend-jaxrs</artifactId> </dependency> -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
