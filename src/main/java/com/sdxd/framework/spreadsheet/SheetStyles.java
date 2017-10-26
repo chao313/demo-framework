@@ -71,6 +71,20 @@ public class SheetStyles {
         });
     }
 
+    public CellStyle newDateStyle(String format) {
+        short dateFormat = spreadsheet.newDataFormat(format);
+        return spreadsheet.newStyle(cellStyle -> {
+            cellStyle.setDataFormat(dateFormat);
+            cellStyle.setAlignment(CellStyle.ALIGN_LEFT);
+            cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+            cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+            cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
+            cellStyle.setBorderRight(CellStyle.BORDER_THIN);
+            cellStyle.setBorderTop(CellStyle.BORDER_THIN);
+            cellStyle.setFont(bodyFont);
+        });
+    }
+
     public Font getBodyFont() {
         return bodyFont;
     }
