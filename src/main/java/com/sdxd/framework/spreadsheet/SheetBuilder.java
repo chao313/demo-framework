@@ -1,13 +1,12 @@
 package com.sdxd.framework.spreadsheet;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.springframework.util.Assert;
+
+import java.util.List;
 
 import static org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder.BorderSide.*;
 
@@ -86,8 +85,22 @@ public class SheetBuilder {
         return new RowBuilder(spreadsheet, this, row, defaultStyle);
     }
 
-    public void merge(int firstRow, int lastRow, int firstCol, int lastCol) {
-        sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+    public int merge(int firstRow, int lastRow, int firstCol, int lastCol) {
+        return sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+    }
+
+    public void sum(int mergedRegion, String columnPrefix, List<String> sumRows) {
+        CellRangeAddress cellRangeAddress = sheet.getMergedRegion(mergedRegion);
+        int rowIndex = cellRangeAddress.getFirstRow();
+        int cellIndex = cellRangeAddress.getFirstColumn();
+        sum(rowIndex, cellIndex, columnPrefix, sumRows);
+    }
+
+    public void sum(int rowIndex, int cellIndex, String columnPrefix, List<String> sumRows) {
+        Row row = sheet.getRow(rowIndex);
+        Cell cell = row.getCell(cellIndex);
+        String sumCells = spreadsheet.sumCells(columnPrefix, sumRows);
+        spreadsheet.setFormula(cell, "SUM(" + sumCells + ")");
     }
 
     public void addError(String error) {
