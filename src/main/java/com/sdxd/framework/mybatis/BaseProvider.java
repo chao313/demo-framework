@@ -1,5 +1,17 @@
 package com.sdxd.framework.mybatis;
 
+import com.sdxd.common.utils.DateUtils;
+import com.sdxd.framework.constant.SysConstants;
+import com.sdxd.framework.entity.BaseEntity;
+import com.sdxd.framework.mybatis.complexQuery.CustomQueryParam;
+import com.sdxd.framework.mybatis.complexQuery.NoValueQueryParam;
+import com.sdxd.framework.mybatis.complexQuery.WithValueQueryParam;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.jdbc.SQL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.Table;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,37 +19,10 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.text.MessageFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.LongAccumulator;
 import java.util.function.LongBinaryOperator;
-
-import javax.persistence.Table;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.jdbc.SQL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.sdxd.common.redis.template.RedisClientTemplate;
-import com.sdxd.common.utils.DateUtils;
-import com.sdxd.common.utils.KeyUtils;
-import com.sdxd.framework.constant.SysConstants;
-import com.sdxd.framework.context.ContextUtils;
-import com.sdxd.framework.entity.BaseEntity;
-import com.sdxd.framework.mybatis.complexQuery.CustomQueryParam;
-import com.sdxd.framework.mybatis.complexQuery.NoValueQueryParam;
-import com.sdxd.framework.mybatis.complexQuery.WithValueQueryParam;
 
 @SuppressWarnings("all")
 public class BaseProvider<T extends BaseEntity> {
@@ -74,7 +59,7 @@ public class BaseProvider<T extends BaseEntity> {
 
     private void initFromThreadLocal() {
         modelClass = BaseProvider.threadModelClass.get();
-        tableName = modelClass.getAnnotation(Table.class).name();
+        tableName = modelClass.getAnnotation(Table.class).name().toLowerCase();
         BaseProvider.threadModelClass.remove();
     }
 
