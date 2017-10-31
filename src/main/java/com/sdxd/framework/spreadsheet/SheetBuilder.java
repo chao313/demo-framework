@@ -118,6 +118,10 @@ public class SheetBuilder {
         spreadsheet.setFormula(cell, formula);
     }
 
+    public void freezeRow(int rowIndex) {
+        sheet.createFreezePane(0, rowIndex);
+    }
+
     public void addError(String error) {
         Row row = sheet.createRow(this.currentRowIndex);
         this.rowIndex = currentRowIndex;
