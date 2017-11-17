@@ -122,6 +122,10 @@ public class SheetBuilder {
         sheet.createFreezePane(0, rowIndex);
     }
 
+    public void autoSizeColumn(int column) {
+        sheet.autoSizeColumn(column, true);
+    }
+
     public void addError(String error) {
         Row row = sheet.createRow(this.currentRowIndex);
         this.rowIndex = currentRowIndex;
