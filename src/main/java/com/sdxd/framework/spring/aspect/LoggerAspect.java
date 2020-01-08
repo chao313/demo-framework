@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
  * Author: qiuyangjun
  * Create Date:2015/7/1
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class LoggerAspect {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -31,8 +31,6 @@ public class LoggerAspect {
     @Pointcut("execution(* com.sdxd..web*..*(..)) || execution(* com.sdxd..service*..*(..)) || execution(* com.sdxd..dao*..*(..))")
     private void doLogger() {
     }
-
-    ;
 
 
     /**

@@ -1,5 +1,16 @@
 package com.sdxd.framework.mybatis;
 
+import com.sdxd.common.utils.DateUtils;
+import com.sdxd.framework.entity.BaseEntity;
+import com.sdxd.framework.mybatis.complexQuery.CustomQueryParam;
+import com.sdxd.framework.mybatis.complexQuery.NoValueQueryParam;
+import com.sdxd.framework.mybatis.complexQuery.WithValueQueryParam;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.jdbc.SQL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,20 +25,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.Table;
-
-import com.sdxd.framework.mybatis.complexQuery.NoValueQueryParam;
-import com.sdxd.framework.dto.LoginUserDto;
-import com.sdxd.framework.entity.BaseEntity;
-import com.sdxd.framework.mybatis.complexQuery.CustomQueryParam;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.jdbc.SQL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.sdxd.common.utils.DateUtils;
-import com.sdxd.framework.mybatis.complexQuery.WithValueQueryParam;
-import com.sdxd.framework.utils.SessionUtils;
 
 @SuppressWarnings("all")
 public class BaseProvider<T extends BaseEntity> {
