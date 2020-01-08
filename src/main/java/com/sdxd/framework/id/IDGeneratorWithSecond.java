@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
  */
 public class IDGeneratorWithSecond extends IDGeneratorWithTimestamp {
     public IDGeneratorWithSecond() {
-        super("", IDDatePattern.PATTERN_SECONDS, 6);
+        super("", IDDatePattern.PATTERN_SECONDS, 5);
     }
 
     public IDGeneratorWithSecond(String prefix) {
-        super(prefix, IDDatePattern.PATTERN_SECONDS, 6);
+        super(prefix, IDDatePattern.PATTERN_SECONDS, 5);
     }
 
     public IDGeneratorWithSecond(String prefix, int bits) {

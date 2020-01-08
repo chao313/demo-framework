@@ -14,11 +14,11 @@ public class IDGeneratorWithDay extends IDGeneratorWithTimestamp {
     private Logger log = LoggerFactory.getLogger(IDGeneratorWithDay.class);
 
     public IDGeneratorWithDay() {
-        super("", IDDatePattern.PATTERN_DAY, 12);
+        super("", IDDatePattern.PATTERN_DAY, 11);
     }
 
     public IDGeneratorWithDay(String prefix) {
-        super(prefix, IDDatePattern.PATTERN_DAY, 12);
+        super(prefix, IDDatePattern.PATTERN_DAY, 11);
     }
 
     public IDGeneratorWithDay(String prefix, int bits) {

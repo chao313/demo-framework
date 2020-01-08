@@ -14,11 +14,11 @@ public class IDGeneratorWithHour extends IDGeneratorWithTimestamp {
     private Logger log = LoggerFactory.getLogger(IDGeneratorWithHour.class);
 
     public IDGeneratorWithHour() {
-        super("", IDDatePattern.PATTERN_HOURS, 10);
+        super("", IDDatePattern.PATTERN_HOURS, 9);
     }
 
     public IDGeneratorWithHour(String prefix) {
-        super(prefix, IDDatePattern.PATTERN_HOURS, 10);
+        super(prefix, IDDatePattern.PATTERN_HOURS, 9);
     }
 
     public IDGeneratorWithHour(String prefix, int bits) {

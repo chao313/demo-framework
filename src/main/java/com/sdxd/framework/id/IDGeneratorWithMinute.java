@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
  */
 public class IDGeneratorWithMinute extends IDGeneratorWithTimestamp {
     public IDGeneratorWithMinute() {
-        super("", IDDatePattern.PATTERN_MINUTES, 8);
+        super("", IDDatePattern.PATTERN_MINUTES, 7);
     }
 
     public IDGeneratorWithMinute(String prefix) {
-        super(prefix, IDDatePattern.PATTERN_MINUTES, 8);
+        super(prefix, IDDatePattern.PATTERN_MINUTES, 7);
     }
 
     public IDGeneratorWithMinute(String prefix, int bits) {
